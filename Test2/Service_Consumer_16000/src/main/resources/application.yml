@@ -1,0 +1,28 @@
+server:
+  port: 16000
+spring:
+  application:
+    name: "consumer-service"
+  cloud:
+    loadbalancer:
+        enabled: true
+  main:
+    allow-bean-definition-overriding: true
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: "${spring.cloud.client.ip-address}:${server.port}"
+    lease-renewal-interval-in-seconds: 5
+    lease-expiration-duration-in-seconds: 15
+  client:
+    service-url:
+      defaultZone: "http://eurekaServer18000:18000/eureka/,http://eurekaServer18001:18001/eureka/,http://eurekaServer18002:18002/eureka/"
+    fetch-registry: true
+    register-with-eureka: true
+
+# 日志配置
+logging:
+  level:
+    root: INFO
+    ynu.edu: DEBUG
+    org.springframework.cloud.loadbalancer: DEBUG
