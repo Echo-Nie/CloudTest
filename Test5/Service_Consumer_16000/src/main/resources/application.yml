@@ -1,0 +1,154 @@
+server:
+  port: 16000
+spring:
+  application:
+    name: "consumer-service"
+  cloud:
+    loadbalancer:
+        enabled: true
+  main:
+    allow-bean-definition-overriding: true
+  # 添加缓存配置
+  cache:
+    type: caffeine
+    caffeine:
+      spec: maximumSize=1000,expireAfterWrite=60s
+
+# Feign启用断路器配置
+feign:
+  circuitbreaker:
+    enabled: true
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+  compression:
+    request:
+      enabled: true
+    response:
+      enabled: true
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: "${spring.cloud.client.ip-address}:${server.port}"
+    lease-renewal-interval-in-seconds: 5
+    lease-expiration-duration-in-seconds: 15
+  client:
+    service-url:
+      defaultZone: "http://eurekaServer18000:18000/eureka/,http://eurekaServer18001:18001/eureka/,http://eurekaServer18002:18002/eureka/"
+    fetch-registry: true
+    register-with-eureka: true
+
+# Resilience4j 配置
+resilience4j:
+  # 断路器配置
+  circuitbreaker:
+    configs:
+      default:
+        registerHealthIndicator: true
+    instances:
+      # 断路器实例A配置
+      circuitBreakerA:
+        registerHealthIndicator: true
+        # 失败率阈值为30%
+        failureRateThreshold: 30
+        # 滑动窗口类型为时间窗口型
+        slidingWindowType: TIME_BASED
+        # 滑动窗口长度为10秒
+        slidingWindowSize: 10
+        # 滑动窗口内最小请求个数为5
+        minimumNumberOfCalls: 5
+        # 自动从OPEN状态变为HALF_OPEN状态的等待时间为5秒
+        waitDurationInOpenState: 5s
+        # HALF_OPEN状态时允许测试响应能力的请求数为3
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+      # 断路器实例B配置
+      circuitBreakerB:
+        registerHealthIndicator: true
+        # 失败率阈值为50%
+        failureRateThreshold: 50
+        # 慢调用阈值为30%
+        slowCallRateThreshold: 30
+        # 慢调用时间阈值为2秒
+        slowCallDurationThreshold: 2000
+        # 滑动窗口类型为时间窗口型
+        slidingWindowType: TIME_BASED
+        # 滑动窗口长度为10秒
+        slidingWindowSize: 10
+        # 滑动窗口内最小请求个数为5
+        minimumNumberOfCalls: 5
+        # 自动从OPEN状态变为HALF_OPEN状态的等待时间为5秒
+        waitDurationInOpenState: 5s
+        # HALF_OPEN状态时允许测试响应能力的请求数为3
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+  # 隔离器配置
+  bulkhead:
+    instances:
+      userServiceBulkhead:
+        # 允许线程并发执行的最大数量为10
+        maxConcurrentCalls: 10
+        # 允许线程阻塞的最大等待时间为20ms
+        maxWaitDuration: 20ms
+  # 限流器配置
+  ratelimiter:
+    instances:
+      userServiceRateLimiter:
+        # 刷新周期为2秒
+        limitRefreshPeriod: 2s
+        # 一个刷新周期内可处理的最大请求数量为5个
+        limitForPeriod: 5
+        # 等待获取允许的超时时间
+        timeoutDuration: 0
+      # 热点参数限流配置
+      hotParameterRateLimiter:
+        limitRefreshPeriod: 1s
+        limitForPeriod: 2
+        timeoutDuration: 100ms
+  # 超时处理配置
+  timelimiter:
+    instances:
+      timeoutLimiter:
+        timeoutDuration: 1s
+        cancelRunningFuture: true
+  # 缓存配置
+  cache:
+    configs:
+      userCache:
+        expireAfterWrite: 10s
+        expireAfterAccess: 5s
+        maxSize: 100
+    instances:
+      userCacheInstance:
+        baseConfig: userCache
+  # 重试配置
+  retry:
+    instances:
+      retryService:
+        maxAttempts: 3
+        waitDuration: 500ms
+        retryExceptions:
+          - java.io.IOException
+          - java.util.concurrent.TimeoutException
+        ignoreExceptions:
+          - java.lang.IllegalArgumentException
+
+# 监控端点配置
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+
+# 日志配置
+logging:
+  level:
+    root: INFO
+    ynu.edu: DEBUG
+    org.springframework.cloud.loadbalancer: DEBUG

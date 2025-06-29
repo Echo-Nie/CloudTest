@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: provider-service
+  cloud:
+    config:
+      discovery:
+        enabled: true
+        service-id: config-server
+      profile: dev
+      label: master
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eurekaServer18000:18000/eureka/,http://eurekaServer18001:18001/eureka/,http://eurekaServer18002:18002/eureka/
+
+# 暴露所有端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*' 

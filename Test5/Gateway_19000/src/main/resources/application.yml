@@ -1,0 +1,98 @@
+server:
+  port: 19000 # 网关服务端口
+
+spring:
+  application:
+    name: cloud-gateway-service # 服务名称
+  cloud:
+    gateway: # 网关配置
+      discovery:
+        locator:
+          enabled: true # 开启从注册中心动态创建路由的功能
+          lower-case-service-id: true # 服务名称小写支持
+      routes: # 路由配置
+        # 服务提供者路由 - 直接方式
+        - id: provider-route-direct # 路由ID
+          uri: http://localhost:11000 # 匹配后提供服务的路由地址
+          predicates: # 断言，路径相匹配的进行路由
+            - Path=/provider-direct/** # 断言，路径相匹配的进行路由
+          filters:
+            - StripPrefix=1 # 去掉前缀，如/provider/user ==> /user
+          
+        # 服务消费者路由 - 直接方式
+        - id: consumer-route-direct
+          uri: http://localhost:16000
+          predicates:
+            - Path=/consumer-direct/**
+          filters:
+            - StripPrefix=1
+            
+        # Nacos提供者路由 - 直接方式
+        - id: nacos-provider-route-direct
+          uri: http://localhost:12000
+          predicates:
+            - Path=/nacos-provider-direct/**
+          filters:
+            - StripPrefix=1
+            
+        # Nacos消费者路由 - 直接方式
+        - id: nacos-consumer-route-direct
+          uri: http://localhost:17000
+          predicates:
+            - Path=/nacos-consumer-direct/**
+          filters:
+            - StripPrefix=1
+            
+        # 服务提供者路由 - 负载均衡方式
+        - id: provider-route-lb
+          uri: lb://PROVIDER-SERVICE # 使用负载均衡访问服务，服务名大写
+          predicates:
+            - Path=/provider/**
+          filters:
+            - StripPrefix=1
+          
+        # 服务消费者路由 - 负载均衡方式
+        - id: consumer-route-lb
+          uri: lb://CONSUMER-SERVICE
+          predicates:
+            - Path=/consumer/**
+          filters:
+            - StripPrefix=1
+            
+        # Nacos提供者路由 - 负载均衡方式
+        - id: nacos-provider-route-lb
+          uri: lb://nacos-provider-service # Nacos服务名称可能是小写
+          predicates:
+            - Path=/nacos-provider/**
+          filters:
+            - StripPrefix=1
+            
+        # Nacos消费者路由 - 负载均衡方式
+        - id: nacos-consumer-route-lb
+          uri: lb://nacos-consumer-service
+          predicates:
+            - Path=/nacos-consumer/**
+          filters:
+            - StripPrefix=1
+
+# Eureka客户端配置
+eureka:
+  client:
+    register-with-eureka: true # 向Eureka注册自己
+    fetch-registry: true # 从Eureka获取注册信息
+    service-url:
+      # 集群版配置多个注册中心地址，用逗号隔开
+      defaultZone: http://localhost:18000/eureka/,http://localhost:18001/eureka/,http://localhost:18002/eureka/
+  instance:
+    instance-id: gateway-19000
+    prefer-ip-address: true
+    
+# 暴露actuator端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*" # 暴露所有端点
+  endpoint:
+    health:
+      show-details: always # 显示详细健康信息 

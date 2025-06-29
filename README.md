@@ -82,32 +82,65 @@ CloudTest
 │       ├── pom.xml
 │       └── src
 └── Test4
-    ├── pom.xml
-    ├── Service_Provider_11000
-    ├── Service_Consumer_16000
-    │   └── src
-    ├── Eureka_Server_18000
-    │   ├── pom.xml
-    │   └── src
-    ├── Eureka_Server_18001
-    │   ├── pom.xml
-    │   └── src
-    ├── Eureka_Server_18002
-    │   ├── pom.xml
-    │   └── src
-    ├── Service_Provider_11001
-    ├── Nacos_Provider_12000
-    │   ├── pom.xml
-    │   └── src
-    ├── Nacos_Provider_12001
-    │   ├── pom.xml
-    │   └── src
-    ├── Nacos_Consumer_17000
-    │   ├── pom.xml
-    │   └── src
-    └── Gateway_19000
-        ├── pom.xml
-        └── src
+│   ├── pom.xml
+│   ├── Service_Provider_11000
+│   ├── Service_Consumer_16000
+│   │   └── src
+│   ├── Eureka_Server_18000
+│   │   ├── pom.xml
+│   │   └── src
+│   ├── Eureka_Server_18001
+│   │   ├── pom.xml
+│   │   └── src
+│   ├── Eureka_Server_18002
+│   │   ├── pom.xml
+│   │   └── src
+│   ├── Service_Provider_11001
+│   ├── Nacos_Provider_12000
+│   │   ├── pom.xml
+│   │   └── src
+│   ├── Nacos_Provider_12001
+│   │   ├── pom.xml
+│   │   └── src
+│   ├── Nacos_Consumer_17000
+│   │   ├── pom.xml
+│   │   └── src
+│   └── Gateway_19000
+│       ├── pom.xml
+│       └── src
+└── Test5
+│   ├── pom.xml
+│   ├── Service_Provider_11000
+│   ├── Service_Consumer_16000
+│   │   └── src
+│   ├── Config_Server_20000
+│   │   ├── pom.xml
+│   │   └── src
+│   ├── Config_Server_20001
+│   │   ├── pom.xml
+│   │   └── src
+│   ├── Eureka_Server_18000
+│   │   ├── pom.xml
+│   │   └── src
+│   ├── Eureka_Server_18001
+│   │   ├── pom.xml
+│   │   └── src
+│   ├── Eureka_Server_18002
+│   │   ├── pom.xml
+│   │   └── src
+│   ├── Service_Provider_11001
+│   ├── Nacos_Provider_12000
+│   │   ├── pom.xml
+│   │   └── src
+│   ├── Nacos_Provider_12001
+│   │   ├── pom.xml
+│   │   └── src
+│   ├── Nacos_Consumer_17000
+│   │   ├── pom.xml
+│   │   └── src
+│   └── Gateway_19000
+│       ├── pom.xml
+│       └── src
 ```
 
 ## 🔍模块说明
