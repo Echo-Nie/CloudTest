@@ -1,39 +1,35 @@
 # Java sources
 *.java linguist-language=Java
-*.groovy linguist-language=Groovy
 
-# Maven
-pom.xml linguist-language=XML
-*.xml linguist-language=XML
+# Maven - Explicitly mark as XML with higher detectable percentage
+pom.xml linguist-language=XML linguist-detectable=true
+*.xml linguist-language=XML linguist-detectable=true
 
-# Spring Boot Configuration
-*.yml linguist-language=YAML
-*.yaml linguist-language=YAML
-*.properties linguist-language=Properties
+# Spring Boot Configuration - Make YAML more prominent
+*.yml linguist-language=YAML linguist-detectable=true
+*.yaml linguist-language=YAML linguist-detectable=true
+*.properties linguist-language=Properties linguist-detectable=true
 
 # Documentation
-*.md linguist-language=Markdown
+*.md linguist-documentation=true linguist-language=Markdown
 *.txt linguist-documentation=true
 LICENSE linguist-documentation=true
 
-# Generated files (don't count in language statistics)
-target/** linguist-generated=true
-**/generated/** linguist-generated=true
-**/generated-sources/** linguist-generated=true
-**/generated-test-sources/** linguist-generated=true
+# Aggressively exclude all generated files from language statistics
+**/target/** linguist-generated=true linguist-vendored=true
+**/target/*.class linguist-generated=true linguist-vendored=true
+**/target/**/*.class linguist-generated=true linguist-vendored=true
+**/generated/** linguist-generated=true linguist-vendored=true
+**/generated-sources/** linguist-generated=true linguist-vendored=true
+**/generated-test-sources/** linguist-generated=true linguist-vendored=true
 
-# Properly detect shell scripts
-*.sh linguist-language=Shell
-*.bat linguist-language=Batchfile
-*.cmd linguist-language=Batchfile
-
-# Mark specific directories as documentation
-**/docs/** linguist-documentation=true
+# Exclude test directories from language statistics
+**/src/test/** linguist-documentation=true
 
 # Handle binary files
-*.jar binary
-*.war binary
-*.zip binary
+*.jar binary linguist-vendored=true
+*.war binary linguist-vendored=true
+*.zip binary linguist-vendored=true
 
 # Handle text files with specific line endings
 *.java text eol=lf
@@ -42,4 +38,8 @@ target/** linguist-generated=true
 *.yaml text eol=lf
 *.properties text eol=lf
 *.md text eol=lf
-*.txt text eol=lf 
+*.txt text eol=lf
+
+# Explicitly vendored content
+**/lib/** linguist-vendored=true
+**/libs/** linguist-vendored=true 
